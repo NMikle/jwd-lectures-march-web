@@ -1,0 +1,19 @@
+plugins {
+    id 'java'
+    id 'war'
+}
+
+group 'com.epam.jwd.web'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
+}
+
+test {
+    useJUnitPlatform()
+}
