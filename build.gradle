@@ -12,6 +12,9 @@ repositories {
 
 dependencies {
     compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
+    compileOnly 'javax.servlet.jsp:javax.servlet.jsp-api:2.3.3'
+    implementation 'javax.servlet.jsp.jstl:jstl-api:1.2'
+    runtimeOnly 'org.glassfish.web:jstl-impl:1.2'
 }
 
 test {
