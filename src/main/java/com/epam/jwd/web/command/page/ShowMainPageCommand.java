@@ -1,4 +1,8 @@
-package com.epam.jwd.web.command;
+package com.epam.jwd.web.command.page;
+
+import com.epam.jwd.web.command.Command;
+import com.epam.jwd.web.command.CommandRequest;
+import com.epam.jwd.web.command.CommandResponse;
 
 public enum ShowMainPageCommand implements Command {
     INSTANCE;

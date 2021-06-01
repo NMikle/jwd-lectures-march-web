@@ -1,14 +1,19 @@
 package com.epam.jwd.web.storage;
 
+import com.epam.jwd.web.exception.UniqueConstraintViolationException;
 import com.epam.jwd.web.model.User;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Predicate;
 
 public enum InMemoryUserStorage implements UserStorage {
     INSTANCE;
+
+    private static final String DUPLICATE_USER_MSG = "User with such name already exists. Name: %s";
 
     private final Map<Long, User> content;
     private final AtomicLong userAmount;
@@ -25,7 +30,26 @@ public enum InMemoryUserStorage implements UserStorage {
 
     @Override
     public User save(User user) {
+        if (userWithSuchNameAlreadyExists(user.getName())) {
+            throw new UniqueConstraintViolationException(String.format(DUPLICATE_USER_MSG, user.getName()));
+        }
         final long id = userAmount.incrementAndGet();
-        return content.put(id, new User(id, user.getName()));
+        return content.put(id, new User(id, user.getName(), user.getPassword()));
+    }
+
+    @Override
+    public Optional<User> findByName(String name) {
+        final Predicate<User> userNameEqualsGiven = user -> user.getName().equals(name);
+        return content.values()
+                .stream()
+                .filter(userNameEqualsGiven)
+                .findAny();
+    }
+
+    private boolean userWithSuchNameAlreadyExists(String name) {
+        return this.content.values()
+                .stream()
+                .map(User::getName)
+                .anyMatch(name::equals);
     }
 }

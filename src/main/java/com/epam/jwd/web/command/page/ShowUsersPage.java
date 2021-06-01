@@ -1,7 +1,10 @@
-package com.epam.jwd.web.command;
+package com.epam.jwd.web.command.page;
 
+import com.epam.jwd.web.command.Command;
+import com.epam.jwd.web.command.CommandRequest;
+import com.epam.jwd.web.command.CommandResponse;
 import com.epam.jwd.web.model.User;
-import com.epam.jwd.web.storage.UserStorage;
+import com.epam.jwd.web.service.UserService;
 
 import java.util.List;
 
@@ -22,15 +25,15 @@ public enum ShowUsersPage implements Command {
         }
     };
 
-    private final UserStorage storage;
+    private final UserService service;
 
     ShowUsersPage() {
-        this.storage = UserStorage.inMemory();
+        this.service = UserService.simple();
     }
 
     @Override
     public CommandResponse execute(CommandRequest request) {
-        final List<User> users = storage.findAll();
+        final List<User> users = service.findAll();
         request.setAttribute(USERS_ATTRIBUTE_NAME, users);
         return SHOW_USERS_PAGE_RESPONSE;
     }
