@@ -1,6 +1,8 @@
 package com.epam.jwd.web.storage;
 
+import com.epam.jwd.web.exception.BusinessValidationException;
 import com.epam.jwd.web.exception.UniqueConstraintViolationException;
+import com.epam.jwd.web.model.Role;
 import com.epam.jwd.web.model.User;
 
 import java.util.List;
@@ -14,6 +16,7 @@ public enum InMemoryUserStorage implements UserStorage {
     INSTANCE;
 
     private static final String DUPLICATE_USER_MSG = "User with such name already exists. Name: %s";
+    private static final String UNAUTHORIZED_MSG = "Unauthorized user can not be saved to storage";
 
     private final Map<Long, User> content;
     private final AtomicLong userAmount;
@@ -33,8 +36,11 @@ public enum InMemoryUserStorage implements UserStorage {
         if (userWithSuchNameAlreadyExists(user.getName())) {
             throw new UniqueConstraintViolationException(String.format(DUPLICATE_USER_MSG, user.getName()));
         }
+        if (Role.UNAUTHORIZED.equals(user.getRole())) {
+            throw new BusinessValidationException(UNAUTHORIZED_MSG);
+        }
         final long id = userAmount.incrementAndGet();
-        return content.put(id, new User(id, user.getName(), user.getPassword()));
+        return content.put(id, new User(id, user.getName(), user.getPassword(), user.getRole()));
     }
 
     @Override

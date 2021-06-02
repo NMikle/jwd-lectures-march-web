@@ -11,11 +11,13 @@ import javax.servlet.http.HttpSession;
 public enum LoginCommand implements Command {
     INSTANCE;
 
+    public static final String USER_ROLE_SESSION_ATTRIB_NAME = "userRole";
+
     private static final String LOGIN_PARAM_NAME = "login";
     private static final String PASSWORD_PASSWORD_PARAM = "password";
     private static final String ERROR_ATTRIB_NAME = "error";
     private static final String INVALID_CREDENTIALS_MSG = "Wrong login or password";
-    private static final String USER_SESSION_ATTRIB_NAME = "user";
+    private static final String USER_NAME_SESSION_ATTRIB_NAME = "userName";
 
     private static final CommandResponse LOGIN_ERROR_RESPONSE = new CommandResponse() {
         @Override
@@ -52,12 +54,22 @@ public enum LoginCommand implements Command {
         final String password = request.getParameter(PASSWORD_PASSWORD_PARAM);
         final User user = new User(login, password);
         if (!service.canLogIn(user)) {
-            request.setAttribute(ERROR_ATTRIB_NAME, INVALID_CREDENTIALS_MSG);
-            return LOGIN_ERROR_RESPONSE;
+            return prepareErrorPage(request);
         }
+        return addUserInfoToSession(request, login);
+    }
+
+    private CommandResponse prepareErrorPage(CommandRequest request) {
+        request.setAttribute(ERROR_ATTRIB_NAME, INVALID_CREDENTIALS_MSG);
+        return LOGIN_ERROR_RESPONSE;
+    }
+
+    private CommandResponse addUserInfoToSession(CommandRequest request, String login) {
         request.getCurrentSession().ifPresent(HttpSession::invalidate);
         final HttpSession session = request.createSession();
-        session.setAttribute(USER_SESSION_ATTRIB_NAME, login);
+        final User loggedInUser = service.findByLogin(login);
+        session.setAttribute(USER_NAME_SESSION_ATTRIB_NAME, loggedInUser.getName());
+        session.setAttribute(USER_ROLE_SESSION_ATTRIB_NAME, loggedInUser.getRole());
         return LOGIN_SUCCESS_RESPONSE;
     }
 }

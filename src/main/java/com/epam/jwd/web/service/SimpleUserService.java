@@ -29,7 +29,7 @@ public enum SimpleUserService implements UserService {
     public User create(User user) {
         final char[] rawPassword = user.getPassword().toCharArray();
         final String encryptedPassword = hasher.hashToString(MIN_COST, rawPassword);
-        return storage.save(new User(user.getName(), encryptedPassword));
+        return storage.save(new User(user.getName(), encryptedPassword, user.getRole()));
     }
 
     @Override

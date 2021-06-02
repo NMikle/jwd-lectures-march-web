@@ -3,6 +3,7 @@ package com.epam.jwd.web.controller;
 import com.epam.jwd.web.command.Command;
 import com.epam.jwd.web.command.CommandRequest;
 import com.epam.jwd.web.command.CommandResponse;
+import com.epam.jwd.web.model.Role;
 import com.epam.jwd.web.model.User;
 import com.epam.jwd.web.service.UserService;
 
@@ -19,7 +20,7 @@ import java.util.Optional;
 @WebServlet(urlPatterns = "/controller")
 public class ApplicationController extends HttpServlet {
 
-    private static final String COMMAND_PARAM_NAME = "command";
+    public static final String COMMAND_PARAM_NAME = "command";
 
     @Override
     public void init() throws ServletException {
@@ -31,6 +32,7 @@ public class ApplicationController extends HttpServlet {
         storage.create(new User("Kate", "Kate"));
         storage.create(new User("Lynn", "Lynn"));
         storage.create(new User("Robert", "Robert"));
+        storage.create(new User("admin", "password", Role.ADMIN));
     }
 
     @Override
