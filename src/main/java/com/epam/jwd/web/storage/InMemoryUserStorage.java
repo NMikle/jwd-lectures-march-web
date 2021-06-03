@@ -52,6 +52,12 @@ public enum InMemoryUserStorage implements UserStorage {
                 .findAny();
     }
 
+    @Override
+    public void clear() {
+        this.content.clear();
+        userAmount.set(0);
+    }
+
     private boolean userWithSuchNameAlreadyExists(String name) {
         return this.content.values()
                 .stream()

@@ -13,6 +13,8 @@ public interface UserStorage {
 
     Optional<User> findByName(String name);
 
+    void clear();
+
     static UserStorage inMemory() {
         return InMemoryUserStorage.INSTANCE;
     }

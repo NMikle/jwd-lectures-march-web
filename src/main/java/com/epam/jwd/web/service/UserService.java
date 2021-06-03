@@ -14,6 +14,8 @@ public interface UserService {
 
     List<User> findAll();
 
+    void clear();
+
     static UserService simple() {
         return SimpleUserService.INSTANCE;
     }

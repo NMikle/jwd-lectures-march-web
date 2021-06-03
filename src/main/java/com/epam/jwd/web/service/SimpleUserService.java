@@ -54,4 +54,9 @@ public enum SimpleUserService implements UserService {
     public List<User> findAll() {
         return storage.findAll();
     }
+
+    @Override
+    public void clear() {
+        this.storage.clear();
+    }
 }
