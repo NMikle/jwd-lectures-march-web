@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="jwdt" uri="jwdTags" %>
 <%@ page import="com.epam.jwd.web.model.Role" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
@@ -6,9 +7,7 @@
     <title>Main Page</title>
 </head>
 <body>
-<c:if test="${not empty sessionScope.userName}">
-    <p>Hello, ${sessionScope.userName}</p>
-</c:if>
+<jwdt:welcomeText/>
 <br>
 <c:choose>
     <c:when test="${empty sessionScope.userName}">
@@ -23,5 +22,6 @@
         <a href="${pageContext.request.contextPath}/controller?command=logout">Logout</a>
     </c:otherwise>
 </c:choose>
+<jwdt:currentTime/>
 </body>
 </html>
